@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SVG-Editior</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <style type="text/css">
+  html, body {
+    min-height: 100%;
+    height: 100%;
+    clear: both;
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    padding: 0;
+  }
+  #toolbox {
+    height: 100%;
+    width: 300px;
+    border-right: 1px solid #666;
+    float: left;
+    margin-right: -300px;
+  }
+  #toolbox h2 {
+    margin: 0;
+    background: #eee;
+    padding: 0 7px;
+  }
+  #toolbox form {
+    padding: 20px 10px;
+  }
+  #main {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 310px;
+    padding-top: 1px;
+  }
+  #screen {
+    width: 600px;
+    height: 800px;
+    margin: auto;
+    margin-top: 20px;
+    /*padding: 10px;*/
+    /*border-radius: 6px;*/
+    border: 1px solid #666;
+    box-shadow: 0 0 5px #666;
+  }
+  label {
+  	display: block;
+  }
+  </style>
+</head>
+
+<body>
+  <aside id="toolbox">
+    <h2>创建</h2>
+    <form id="create-shape">
+      <lable><input type="button" value="rect"></lable>
+      <lable><input type="button" value="circle"></lable>
+      <lable><input type="button" value="ellipse"></lable>
+      <lable><input type="button" value="line"></lable>
+    </form>
+    <!-- ******************************************* -->
+    <h2>形状</h2>
+    <form id="shape-attrs">
+      <p>请先创建图形</p>
+    </form>
+    <!-- ******************************************* -->
+    <h2>外观和变换</h2>
+    <form id="look-and-transform">
+      <p>
+        <label>填充<input id="fill" type="color" value="#ffffff" /></label>
+      </p>
+      <p>
+        <label>描边<input id="stroke" type="color" value="#ff0000" />
+          <input id="strokeWidth" type="range" value="1" />
+        </label>
+      </p>
+      <p>
+        <label>translateX <input id="translateX" type="range" min="-400" max="400" value="0"></label>
+        <label>translateY <input id="translateY" type="range" min="-400" max="400" value="0"></label>
+        <label>rotate <input id="rotate" type="range" min="-180" max="180" value="0"></label>
+        <label>scale <input id="scale" type="range" min="-1" max="2" step="0.01" value="1"></label>
+      </p>
+    </form>
+  </aside>
+  <div id="main">
+    <div id="screen">
+    	<!-- <svg width="100%" height="100%"></svg> -->
+    </div>
+  </div>
+</body>
+<script type="text/javascript">
+// SVG命名空间
+const SVG_NS = 'http://www.w3.org/2000/svg'
+// 图形及对应默认属性
+let shapeInfo = {
+  rect: 'x:10,y:10,width:200,height:100,rx:0,ry:0',
+  circle: 'cx:200,cy:200,r:50',
+  ellipse: 'cx:200,cy:200,rx:80,ry:30',
+  line: 'x1:10,y1:10, x2:100,y2:100'
+}
+// 默认公共属性
+let defaultAttrs = {
+  fill: '#e5e5e5',
+  stroke: '#666666'
+}
+// 
+let createForm = document.getElementById('create-shape')
+let attrForm = document.getElementById('shape-attrs')
+let lookForm = document.getElementById('look-and-transform')
+// 
+let svg = createSVG() // 被创建的新的SVG元素
+let selected = null // 当前的SVG元素
+//SVG元素的修改
+svg.addEventListener('click',function(e){
+	if(e.target.tagName.toLowerCase() in shapeInfo) {
+		select(e.target)
+	}
+})
+// 从表格赋值
+createForm.addEventListener('click', function(e){
+	if(e.target.getAttribute('type').toLowerCase() == 'button') {
+		create(e.target.getAttribute('value'))
+	}
+})
+
+attrForm.addEventListener('input', function(e){
+	if(e.target.tagName.toLowerCase()!='input') return;
+	let handle = e.target
+	selected.setAttribute(handle.name, handle.value)
+})
+
+lookForm.addEventListener('input', function(e){
+	if(e.target.tagName.toLowerCase()!='input') retsurn;
+	if(!selected) return;
+	let handle = e.target
+	selected.setAttribute('fill', fill.value)
+	selected.setAttribute('stroke', stroke.value)
+	selected.setAttribute('stroke-width' ,strokeWidth.value)
+})
+
+// 创建SVG元素
+function createSVG() {
+	let svg = document.createElementNS(SVG_NS, 'svg')
+	svg.setAttribute('width', '100%')
+	svg.setAttribute('height','100%')
+	document.getElementById('screen').appendChild(svg)
+	return svg
+}
+// 创建形状
+function create(name) {
+	let shape = document.createElementNS(SVG_NS, name)
+	svg.append(shape)
+	select(shape)
+}
+// 选中图形
+function select(shape) {
+	let attrs = shapeInfo[shape.tagName].split(',')
+	let attr, name, value
+
+	// 重新生成对应的形状属性表格
+	attrForm.innerHTML = ''
+
+	while(attrs.length) {
+		attr = attrs.shift().split(':')
+		name = attr[0]
+		value = shape.getAttribute(name) || attr[1]
+		createHandle(shape, name, value)
+		shape.setAttribute(name, value)
+	}
+
+	for (name in defaultAttrs){
+		value = shape.getAttribute(name) || defaultAttrs[name]
+		shape.setAttribute(name, value)
+	}
+	// 选中这个图形
+	selected = shape
+	// 更新它的显示
+	updateLookHandle()
+}
+
+// 创建指定属性的控件
+function createHandle (shape, name, value) {
+	let label = document.createElement('label')
+	label.textContent = name
+	console.log(name)
+
+	let handle = document.createElement('input')
+	handle.setAttribute('name',name)
+	handle.setAttribute('type','range')
+	handle.setAttribute('value',value)
+	handle.setAttribute('min',0)
+	handle.setAttribute('max',800)
+	
+	attrForm.appendChild(label)
+	attrForm.appendChild(handle)
+}
+
+// 更新基本属性控件
+function updateLookHandle() {
+	fill.value = selected.getAttribute('fill')
+	stroke.value = selected.getAttribute('stroke')
+	let t = decodeTransform(selected.getAttribute('transform'))
+	translateX.value = t ? t.tx : 0
+	translateY.value = t ? t.ty : 0
+	rotate.value = t ? t.rotate : 0
+	scale.value = t ? t.scale : 0
+}
+// 
+function decodeTransform(tranString) {
+	let match = /translate\((\d+),(\d+)\)\srotate\((\d+)\)\sscale\((\d+)\)/.exec(tranString)
+	return match ? {
+		tx: +match[1],
+		ty: +match[2],
+		rotate: +match[3],
+		scale: +match[4]
+	} : null
+}
+// 
+function encodeTransform(transObject) {
+	return ['translate(', transObject.tx,',',transObject.ty,') ','rotate(', transObject.rotate,') ', 'scale(',transObject.scale,')'].join('')
+}
+</script>
+
+</html>
