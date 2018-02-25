@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>SVG-L2-Demo</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html, body {
+    height: 100%;
+  }
+  body {
+    clear: both;
+    padding-top: 65px;
+  }
+  ul, ol, dl {
+    list-style: none;
+  }
+  label {
+    display: block;
+  }
+  h1 {
+    padding: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  h1 b {
+  	text-decoration: underline;
+  	cursor: pointer;
+  	color: blue;
+  	font-size: .5em;
+  	margin-left: .5em;
+  }
+  div.options {
+    float: left;
+    padding: 10px;
+    width: 50%;
+    height: 100%;
+    overflow-x: scroll;
+    background: rgba(240, 240, 240, .5)
+  }
+  .options ul {
+    width: 2660px;
+    height: 100%;
+  }
+  .options ul li {
+    position: relative;
+    padding: 5px;
+    width: 380px;
+    float: left;
+  }
+  .options ul li input.points {
+  	width: 300px;
+  }
+  .options ul li textarea {
+  	width: 300px;
+  	height: 200px;
+  	resize: none;
+  }
+  div#screen {
+    margin-top: 10px;
+    width: 48%;
+    height: 500px;
+    float: left;
+    border: 1px dashed #333333;
+    position: relative;
+  }
+  div#screen svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  li p {
+    text-align: right;
+  }
+  button.submit {
+    padding: 5px 10px;
+    margin-right: 20px;
+  }
+  </style>
+</head>
+
+<body>
+  <h1>SVG预定义的形状及其所需参数概览Demo<b id="clear">清空画布</b></h1>
+  <div class="options">
+    <ul>
+      <li id="rect">
+        <h2>写一个矩形rect：</h2>
+        <form>
+          <label>x: <input type="number" class="x" value="0"></label>
+          <label>y: <input type="number" class="y" value="0"></label>
+          <label>rx: <input type="number" class="rx" value="0"></label>
+          <label>ry: <input type="number" class="ry" value="0"></label>
+          <label>Width: <input type="number" class="width" value="300"></label>
+          <label>Height: <input type="number" class="height" value="100"></label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+      </li>
+      <li id="circle">
+        <h2>写一个圆形circle：</h2>
+        <form>
+          <label>cx: <input type="number" class="cx" value="50"></label>
+          <label>cy: <input type="number" class="cy" value="50"></label>
+          <label>r: <input type="number" class="r" value="40"></label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+      </li>
+      <li id="ellipse">
+        <h2>写一个椭圆ellipse：</h2>
+        <form>
+          <label>cx: <input type="number" class="cx" value="80"></label>
+          <label>cy: <input type="number" class="cy" value="50"></label>
+          <label>rx: <input type="number" class="rx" value="60"></label>
+          <label>ry: <input type="number" class="ry" value="30"></label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+      </li>
+      <li id="line">
+        <h2>写一个线条line：</h2>
+        <form>
+          <label>x1: <input type="number" class="x1" value="10"></label>
+          <label>y1: <input type="number" class="y1" value="10"></label>
+          <label>x2: <input type="number" class="x2" value="60"></label>
+          <label>y2: <input type="number" class="y2" value="25"></label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+      </li>
+      <li id="polygon">
+        <h2>写一个多边形polygon：3个点及以上</h2>
+        <form>
+          <label>points: <input type="text" class="points" value="220,100 300,210 170,250"></label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+      </li>
+      <li id="polyline">
+        <h2>写一个折线polyline：</h2>
+        <form>
+          <label>points: <input type="text" class="points" value="220,100 300,210 170,250"></label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+      </li>
+      <li id="path">
+        <h2>写一个路径path：</h2>
+        <form>
+          <label>d:
+            <textarea class="d">M153 334
+C153 334 151 334 151 334
+C151 339 153 344 156 344
+C164 344 171 339 171 334
+C171 322 164 314 156 314
+C142 314 131 322 131 334
+C131 350 142 364 156 364
+C175 364 191 350 191 334
+C191 311 175 294 156 294
+C131 294 111 311 111 334
+C111 361 131 384 156 384
+C186 384 211 361 211 334
+C211 300 186 274 156 274</textarea>
+          </label>
+          <label>Fill: <input type="text" class="fill" value="#e3e3e3"></label>
+          <label>Fill-opacity: <input type="range" class="fill-opacity" min="0" max="1" value="1" step="0.1"></label>
+          <label>Stroke: <input type="text" class="stroke" value="#333333"></label>
+          <label>Stroke-width: <input type="text" class="stroke-width" value="1"></label>
+          <label>Stroke-opacity: <input type="range" class="stroke-opacity" min="0" max="1" value="1" step="0.1"></label>
+        </form>
+        <p>
+          <button class="submit">生成图形</button>
+        </p>
+        <pre>
+&lt;path&gt; 标签用来定义路径。
+下面的命令可用于路径数据：
+M = moveto
+L = lineto
+H = horizontal lineto
+V = vertical lineto
+C = curveto
+S = smooth curveto
+Q = quadratic Belzier curve
+T = smooth quadratic Belzier curveto
+A = elliptical Arc
+Z = closepath
+注释：以上所有命令均允许小写字母。大写表示绝对定位，小写表示相对定位。
+        </pre>
+      </li>
+    </ul>
+  </div>
+  <div id="screen"></div>
+</body>
+<script type="text/javascript">
+$(function() {
+  $('.submit').on('click', function() {
+    var item = $(this).parents('li')
+    var options = getGeneralOptions(item.find('form'))
+    var svg = createSVGElement(options)
+    $('#screen').append(svg)
+  })
+  $('#clear').on('click',function(){
+  	$('#screen').html('')
+  })
+})
+// ------------------------------------LIB-------------------------------- //
+
+var svgPropsList = {
+  style: ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity'],
+  rect: ['x', 'y', 'rx', 'width', 'height'],
+  circle: ['cx', 'cy', 'r'],
+  ellipse: ['cx', 'cy', 'rx', 'ry'],
+  line: ['x1', 'y1', 'x2', 'y2'],
+  polygon: ['points'],
+  polyline: ['points'],
+  path: ['d']
+}
+
+function getGeneralOptions($el) {
+  var option = {}
+  option.svg = $el.parent().attr('id')
+  $el.find('input').each(function(i, el) {
+    option[$(el).attr('class')] = $(el).val()
+  })
+  $el.find('textarea').each(function(i, el) {
+    option[$(el).attr('class')] = $(el).val()
+  })
+  console.log(option)
+  return option
+}
+
+function createSVGElement(options) {
+  var str = '<svg><' + options.svg + ' ';
+  for (let i in svgPropsList[options.svg]) {
+    let k = svgPropsList[options.svg][i]
+    if (!options[k]) { console.log("Required parameter missing： " + k); return false }
+    str += (k + '="' + options[k] + '" ')
+  }
+  str += 'style="'
+  for (let i in svgPropsList.style) {
+    let k = svgPropsList.style[i]
+    if (!options[k]) continue
+    str += k + ':' + options[k] + '; '
+  }
+  str += '"/></svg>'
+  return str
+}
+</script>
+
+</html>
