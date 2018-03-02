@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>L4 g/defs/use</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <svg width="1000" height="600" viewBox="-200.5 -100.5 1000 600">
+    <defs>
+      <g id="coord">
+        <line x1="0" y1="0" x2="300" y2="0" />
+        <line x1="0" y1="0" x2="0" y2="300" />
+        <circle cx="0" cy="0" r="2"/>
+        <circle cx="100" cy="0" r="2"/>
+        <circle cx="200" cy="0" r="2"/>
+        <circle cx="0" cy="100" r="2"/>
+        <circle cx="0" cy="200" r="2"/>
+      </g>
+    </defs>
+    <use xlink:href="#coord" stroke="#000" fill="#000" />
+    <text fill="#000" x="5" y="-10">World</text>
+    <g id="a" transform="translate(100,50)">
+      <use xlink:href="#coord" stroke="#e00" fill="#e00" />
+      <text fill="#e00" x="5" y="-10">A</text>
+    </g>
+    <g id="b" transform="rotate(60) translate(100,50)">
+      <use xlink:href="#coord" stroke="#e60" fill="#e60" />
+      <text fill="#e60" x="5" y="-10">B</text>
+    </g>
+    <g id="c" transform="translate(100,50) rotate(60)">
+      <use xlink:href="#coord" stroke="#06e" fill="#06e" />
+      <text fill="#06e" x="5" y="-10">C</text>
+    </g>
+    <g id="d" transform="translate(200,100) rotate(60) scale(.7)">
+      <use xlink:href="#coord" stroke="#60e" fill="#60e" />
+      <text fill="#60e" x="5" y="-10">D</text>
+    </g>
+  </svg>
+
+</body>
+
+</html>

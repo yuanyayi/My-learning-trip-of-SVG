@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <title>L4 radialGradient</title>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <svg width="1000" height="600" viewBox="-0.5 -0.5 1000 600" style="background: #eee;">
+    <defs>
+      <!-- 一般的线性设置 -->
+      <radialGradient id="grad1" cx="0.5" cy="0.5" r="0.5" fx="0.8" fy="0.2" gradientUnits="objectBoundingBox">
+        <stop offset="0" stop-color="#3aa34c"/>
+        <stop offset="0.7" stop-color="#d58d4b"/>
+        <stop offset="1" stop-color="#d5554b"/>
+      </radialGradient>
+      <!-- 因为(0,0)~(1,1)，所以一定会取最后一个颜色： -->
+      <radialGradient id="grad2" cx="0.5" cy="0.5" r="0.5" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#3aa34c"/>
+        <stop offset="0.7" stop-color="#d58d4b"/>
+        <stop offset="1" stop-color="#d5554b"/>
+      </radialGradient>
+      <!-- userSPaceOnUse指的是世界坐标系！要产生效果修正坐标值： -->
+      <radialGradient id="grad3" cx="500" cy="300" r="300" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#3aa34c"/>
+        <stop offset="0.7" stop-color="#d58d4b"/>
+        <stop offset="1" stop-color="#d5554b"/>
+      </radialGradient>
+    </defs>
+    <g stroke="#fff" fill="url(#grad1)">
+      <rect x="0" y="0" width="200" height="150" />
+    </g>
+    <g stroke="#fff" fill="url(#grad2)" transform="translate(250)">
+      <rect x="0" y="0" width="200" height="150" />
+    </g>
+    <g stroke="#fff" fill="url(#grad3)" transform="translate(0,170)">
+      <rect x="0" y="0" width="800" height="800" />
+    </g>
+  </svg>
+
+</body>
+
+</html>
